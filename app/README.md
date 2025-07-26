@@ -33,6 +33,5 @@ REGISTRY_USER
 REGISTRY_URL
 
 ```
-![Gitlab variables](images/GitlabVariables.png
+![Gitlab variables](images/GitlabVariables.png)
 
-)
