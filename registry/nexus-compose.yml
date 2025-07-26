@@ -10,13 +10,16 @@ volumes:
 
 services:
   nexus:
-    image: sonatype/nexus3:${image_tag}
+    image: sonatype/nexus3:${nexus_image_tag}
     container_name: nexus
     hostname: nexus
-    restart: ${restart_policy}
+    restart: ${nexus_restart_policy}
     volumes:
       - nexus_data:/nexus-data
     environment:
       NEXUS_SECURITY_INITIAL_PASSWORD: ${nexus_admin_pass}
+    ports:
+      - 8081:8081
+      - 8082:8082
     networks:
       - web_net

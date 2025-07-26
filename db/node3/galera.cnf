@@ -1,0 +1,20 @@
+[galera]
+query_cache_size                =0
+query_cache_type                =0
+innodb_flush_log_at_trx_commit  =2
+innodb_buffer_pool_size         =20G
+bind-address                    =0.0.0.0
+max_heap_table_size             =300MB
+innodb_flush_log_at_trx_commit  =0
+wsrep_provider_options          = 'gcache.size=5G; gcache.page_size=5G;gcs.fc_limit=40;gcs.fc_factor=0.8'
+wsrep_slave_threads             = 32
+wsrep_on                        = ON
+wsrep_provider                  = /usr/lib/galera/libgalera_smm.so
+wsrep_cluster_address           = "gcomm://mariadb-node1,mariadb-node2,mariadb-node3"
+binlog_format                   = row
+default_storage_engine          = InnoDB
+innodb_autoinc_lock_mode        = 2
+wsrep_node_address              = "mariadb-node3"
+wsrep_sst_method                = rsync
+wsrep_node_name                 = "db41"
+wsrep_cluster_name              = "my_cluster"

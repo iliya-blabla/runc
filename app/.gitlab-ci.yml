@@ -1,0 +1,65 @@
+stages:
+  - build
+  - deploy
+
+default:
+  before_script:
+    - docker login -u ${CI_REGISTRY_URL} -p ${CI_JOB_TOKEN} ${CI_REGISTRY}
+
+
+variables:
+  SSH_PORT: 22
+#For testing, we will set the private registry domain to reg.test.tld.
+  IMAGE_PATH: reg.test.tld/task
+  SERVICE_PATH: /opt/services/app
+  VERSION: v1.0.6
+
+build-django-job:
+  stage: build
+  script:
+    - docker build -t ${IMAGE_PATH}/app:$CI_COMMIT_SHORT_SHA .
+    - docker push ${IMAGE_PATH}/app:$CI_COMMIT_SHORT_SHA
+  except:
+    - schedules
+  retry: 2
+
+deploy-to-production:
+  stage: deploy
+  image: reg.test.tld/app/runner-image:ssh
+  variables:
+    DOMAIN: production.test.tld
+    SERVER_NAME: production.test.tld
+    HOSTNAME: production
+  before_script:
+    - 'command -v ssh-agent >/dev/null || ( apk add --update openssh )'
+    - eval $(ssh-agent -s)
+    - chmod 400 "$SSH_PRIVATE_KEY"
+    - ssh-add "$SSH_PRIVATE_KEY"
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+  script:
+    - |
+      # Create directory if not exist
+      ssh -o StrictHostKeyChecking=no -p ${SSH_PORT} ${SSH_USER}@${SERVER_NAME} "
+      [ -d ${SERVICE_PATH} ] || mkdir -p ${SERVICE_PATH}
+      "
+      # change env file
+      sed -i "s/FQDN/${DOMAIN}/g" .env
+      sed -i "s/SERVER_NAME/${HOSTNAME}/g" .env
+      sed -i "s/PIPELINE_ID/${VERSION}/g" .env
+      # move compose and env file to server
+      scp -o StrictHostKeyChecking=no -P${SSH_PORT} .env ${SSH_USER}@${SERVER_NAME}:${SERVICE_PATH}/
+      scp -o StrictHostKeyChecking=no -P${SSH_PORT} compose.yml ${SSH_USER}@${SERVER_NAME}:${SERVICE_PATH}/
+      # deploy service on server
+      ssh -o StrictHostKeyChecking=no -p ${SSH_PORT} ${SSH_USER}@${SERVER_NAME} "
+      docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
+      cd ${SERVICE_PATH}
+      docker compose pull
+      docker compose up -d
+      "
+  environment:
+    name: production
+    url: https://app.$DOMAIN
+  when: manual
+  except:
+    - schedules

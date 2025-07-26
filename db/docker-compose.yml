@@ -1,0 +1,96 @@
+version: "3.8"
+
+networks:
+  galera-net:
+    name: galera-net
+    external: true
+
+services:
+  mariadb-node1:
+    image: mariadb:${MARIADB_IMAGE_TAG}
+    container_name: mariadb-node1
+    hostname: mariadb-node1
+    restart: ${MARIADB_RESTART_POLICY}
+    environment:
+      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+      - REPLICATION_PASSWORD=${MARIADB_ROOT_PASSWORD}
+    volumes:
+      - ./node1/galera.cnf:/etc/mysql/mariadb.conf.d/galera.cnf
+      - ./node1/galera:/var/lib/mysql
+    command:
+      --wsrep-new-cluster
+    stdin_open: true
+    privileged: true
+    tty: true
+    ulimits:
+      nofile:
+        soft: 600000
+        hard: 640000
+    networks:
+      - galera-net
+    healthcheck:
+      test: ["CMD", "mariadb-admin", "ping", "-h", "localhost", "-u", "root", "-p${MARIADB_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  mariadb-node2:
+    image: mariadb:${MARIADB_IMAGE_TAG}
+    container_name: mariadb-node2
+    hostname: mariadb-node2
+    restart: ${MARIADB_RESTART_POLICY}
+    environment:
+      - MARIADB_ROOT_PASSWORD= ${MARIADB_ROOT_PASSWORD}
+      - REPLICATION_PASSWORD=${MARIADB_ROOT_PASSWORD}
+    volumes:
+      - ./node2/galera.cnf:/etc/mysql/mariadb.conf.d/galera.cnf
+      - ./node2/galera:/var/lib/mysql
+    stdin_open: true
+    privileged: true
+    tty: true
+    ulimits:
+      nofile:
+        soft: 600000
+        hard: 640000
+    networks:
+      - galera-net
+    depends_on:
+      mariadb-node1:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "mariadb-admin", "ping", "-h", "localhost", "-u", "root", "-p${MARIADB_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  mariadb-node3:
+    image: mariadb:${MARIADB_IMAGE_TAG}
+    container_name: mariadb-node3
+    hostname: mariadb-node3
+    restart: ${MARIADB_RESTART_POLICY}
+    environment:
+      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+      - REPLICATION_PASSWORD=${MARIADB_ROOT_PASSWORD}
+    volumes:
+      - ./node3/galera.cnf:/etc/mysql/mariadb.conf.d/galera.cnf
+      - ./node3/galera:/var/lib/mysql
+    stdin_open: true
+    privileged: true
+    tty: true
+    ulimits:
+      nofile:
+        soft: 600000
+        hard: 640000
+    networks:
+      - galera-net
+    depends_on:
+      mariadb-node1:
+        condition: service_healthy
+      mariadb-node2:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "mariadb-admin", "ping", "-h", "localhost", "-u", "root", "-p${MARIADB_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
