@@ -5,18 +5,19 @@ First we create a sample project structure
 ```bash
 .
 ├── django
-│   ├── docker-compose.yml
+│   ├── app-py
 │   ├── Dockerfile
 │   ├── .dockerignore
-│   ├── .env
 │   └── requirements.txt
+├── docker-compose.yml
 ├── .env
 ├── .gitlab-ci.yml
-├── nginx-compose.yml
-├── nginx.conf
+├── nginx
+│   ├── docker-compose.yml
+│   ├── .env
+│   └── nginx.conf
 └── README.md
 ```
-
 
 ##Protected variables:
 set protected variable in Project ⇒ Settings ⇒ CI/CD ⇒ Variables
@@ -31,7 +32,14 @@ SSH_PRIVATE_KEY
 REGISTRY_PASS
 REGISTRY_USER
 REGISTRY_URL
-
 ```
 ![Gitlab variables](images/GitlabVariables.png)
+
+
+```bash
+stages:
+  - Build
+  - Deploy
+```
+
 

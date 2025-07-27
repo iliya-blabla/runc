@@ -12,11 +12,12 @@ variables:
 #For testing, we will set the private registry domain to reg.test.tld.
   IMAGE_PATH: reg.test.tld/task
   SERVICE_PATH: /opt/services/app
-  VERSION: v1.0.6
-
+  VERSION: v1.0.0
+  APP_NETWORK: app_network
 build-django-job:
   stage: build
   script:
+    - cd django
     - docker build -t ${IMAGE_PATH}/app:$CI_COMMIT_SHORT_SHA .
     - docker push ${IMAGE_PATH}/app:$CI_COMMIT_SHORT_SHA
   except:
@@ -44,15 +45,14 @@ deploy-to-production:
       [ -d ${SERVICE_PATH} ] || mkdir -p ${SERVICE_PATH}
       "
       # change env file
-      sed -i "s/FQDN/${DOMAIN}/g" .env
-      sed -i "s/SERVER_NAME/${HOSTNAME}/g" .env
       sed -i "s/PIPELINE_ID/${VERSION}/g" .env
       # move compose and env file to server
       scp -o StrictHostKeyChecking=no -P${SSH_PORT} .env ${SSH_USER}@${SERVER_NAME}:${SERVICE_PATH}/
-      scp -o StrictHostKeyChecking=no -P${SSH_PORT} compose.yml ${SSH_USER}@${SERVER_NAME}:${SERVICE_PATH}/
+      scp -o StrictHostKeyChecking=no -P${SSH_PORT} docker-compose.yml ${SSH_USER}@${SERVER_NAME}:${SERVICE_PATH}/
       # deploy service on server
       ssh -o StrictHostKeyChecking=no -p ${SSH_PORT} ${SSH_USER}@${SERVER_NAME} "
       docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
+      docker network ls | grep ${APP_NETWORK} || docker network create ${APP_NETWORK}
       cd ${SERVICE_PATH}
       docker compose pull
       docker compose up -d

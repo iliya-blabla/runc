@@ -1,7 +1,7 @@
 version: "3.8"
 
 networks:
-  galera-net:
+  galera_net:
     name: galera-net
     external: true
 
@@ -27,7 +27,7 @@ services:
         soft: 600000
         hard: 640000
     networks:
-      - galera-net
+      - galera_net
     healthcheck:
       test: ["CMD", "mariadb-admin", "ping", "-h", "localhost", "-u", "root", "-p${MARIADB_ROOT_PASSWORD}"]
       interval: 10s
@@ -54,7 +54,7 @@ services:
         soft: 600000
         hard: 640000
     networks:
-      - galera-net
+      - galera_net
     depends_on:
       mariadb-node1:
         condition: service_healthy
@@ -83,7 +83,7 @@ services:
         soft: 600000
         hard: 640000
     networks:
-      - galera-net
+      - galera_net
     depends_on:
       mariadb-node1:
         condition: service_healthy

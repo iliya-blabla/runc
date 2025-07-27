@@ -30,5 +30,5 @@ Due to limited resources, we create two very small Debian12 VMs on the personal 
 - Another as a registry server (**VM-2**)
 
 ### TLD of project:
-![TLD of project:](images/first-design.png)
+![TLD of project:](images/runc-task-tld.png)
 # prepairing

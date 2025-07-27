@@ -1,0 +1,42 @@
+version: '3.8'
+networks:
+  app_network:
+    name: app_network
+    external: true
+  galera-net:
+    name: galera_net
+    external: true
+services:
+  django_app_1:
+    image: ${REPOSITORY_NAME}/${IMAGE_DIRECTORY_NAME}/app:${VERSION}
+    container_name: django_app_1
+    hostname: django_app_1
+    restart: ${RESTART_POLICY}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    expose:
+      - "8000"
+    networks:
+      - app_network
+      - galera_net
+
+  django_app_2:
+    image: ${REPOSITORY_NAME}/${IMAGE_DIRECTORY_NAME}/app:${VERSION}
+    container_name: django_app_2
+    hostname: django_app_2
+    restart: ${RESTART_POLICY}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    expose:
+      - "8000"
+    networks:
+      - app_network
+      - galera_net
