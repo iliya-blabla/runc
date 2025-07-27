@@ -35,11 +35,20 @@ REGISTRY_URL
 ```
 ![Gitlab variables](images/GitlabVariables.png)
 
-
+In this task, we are asked to do two stages:
 ```bash
 stages:
   - Build
   - Deploy
 ```
+Given that there are only two stages(Which we call production) and one environment in this task, we design the pipeline as follows:
+**pipeline:**
+![pipeline design](images/pipeline.jpg)
+**build job**
+![build design](images/build-job.jpg)
+**deploy job**
+![pipeline design](images/deploy-job.jpg)
+
+I used dind for the GitLab Runner executor
 
 

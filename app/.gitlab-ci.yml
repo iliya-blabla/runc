@@ -59,7 +59,6 @@ deploy-to-production:
       "
   environment:
     name: production
-    url: https://app.$DOMAIN
   when: manual
   except:
     - schedules
