@@ -18,7 +18,7 @@ First we create a sample project structure
 │   └── nginx.conf
 └── README.md
 ```
-
+# CI/CD pipeline:
 ## Protected variables:
 set protected variable in Project ⇒ Settings ⇒ CI/CD ⇒ Variables
 
@@ -50,5 +50,5 @@ Given that there are only two stages(Which we call production) and one environme
 ![pipeline design](../images/deploy-jobs.jpg)
 
 I used dind for the GitLab Runner executor
-
+Manual approval is required for deployment.
 
