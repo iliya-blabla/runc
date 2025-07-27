@@ -16,8 +16,16 @@ services:
     restart: ${RESTART_POLICY}
     ports:
       - "80:80"
+      - "3306:3306"
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - .conf.d /etc/nginx/conf.d
     networks:
       - app_network
       - galera_net
+    depends_on:
+      - django_app1
+      - django_app2
+      - mariadb-node1
+      - mariadb-node2
+      - mariadb-node3

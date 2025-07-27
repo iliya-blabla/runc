@@ -2,7 +2,7 @@ version: "3.8"
 
 networks:
   galera_net:
-    name: galera-net
+    name: galera_net
     external: true
 
 services:

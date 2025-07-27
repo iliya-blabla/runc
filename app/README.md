@@ -19,7 +19,7 @@ First we create a sample project structure
 └── README.md
 ```
 
-##Protected variables:
+## Protected variables:
 set protected variable in Project ⇒ Settings ⇒ CI/CD ⇒ Variables
 
 ```bash
@@ -33,7 +33,7 @@ REGISTRY_PASS
 REGISTRY_USER
 REGISTRY_URL
 ```
-![Gitlab variables](images/GitlabVariables.png)
+![Gitlab variables](../images/GitlabVariables.png)
 
 In this task, we are asked to do two stages:
 ```bash
@@ -43,11 +43,11 @@ stages:
 ```
 Given that there are only two stages(Which we call production) and one environment in this task, we design the pipeline as follows:
 **pipeline:**
-![pipeline design](images/pipeline.jpg)
+![pipeline design](../images/pipeline.jpg)
 **build job**
-![build design](images/build-job.jpg)
+![build design](../images/build-jobs.jpg)
 **deploy job**
-![pipeline design](images/deploy-job.jpg)
+![pipeline design](../images/deploy-jobs.jpg)
 
 I used dind for the GitLab Runner executor
 
