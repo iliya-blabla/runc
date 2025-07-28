@@ -59,4 +59,4 @@ We can create a compose and include all the composes in this file.
 
 I preferred to create a **project-tester.sh** file that runs the compose.
 
-
+![project tester](../images/project-tester.png)

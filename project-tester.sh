@@ -1,7 +1,7 @@
 #!/bin/bash
 
 networks=("galera_net" "app_network")
-compose_files=("db/docker-compose.yml" "app/nginx/docker-compose.yml" "app/docker-compose.yml")
+compose_files=("db/docker-compose.yml" "app/docker-compose.yml" "app/nginx/docker-compose.yml")
 
 check_network() {
     if ! docker network ls | grep -q "$1"; then
