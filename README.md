@@ -1,6 +1,9 @@
 # runc DevOps engineering entry challenge
 ## Overview
- Wellcome to my projject The goal of this task is to design and implement a DevOps infrastructure for a Django application, focusing on classic tools such as Docker, Gitlab, and...
+
+Wellcome to my projject The goal of this task is to design and implement a DevOps infrastructure for a Django application, focusing on classic tools such as Docker, Gitlab, and...
+
+## Inside this file are the contents related to the structure of the entire project and server. To view the documents for each service, refer to the folder of that service
 
 ### The main parts of the challenge:
 #### 1. Create a private Docker registry
@@ -175,7 +178,15 @@ COMMIT
 # Completed on Sun Jul 27 22:18:43 2025
 ```
 ######  Disable root login:
-- ssh login:
- The value of PermitRootLogin in the sshd_config file is no
-- local login:
- I changed root:x:0:0:root:/root:/bin/bash root:x:0:0:root:/root:/sbin/nologin in /etc/passwd
+
+- **ssh login:**
+
+The value of PermitRootLogin in the sshd_config file is no
+
+- **local login:**
+
+I changed root:x:0:0:root:/root:/bin/bash root:x:0:0:root:/root:/sbin/nologin in /etc/passwd
+
+- **The rest of the methods(pam,console sevice,...):**
+
+
