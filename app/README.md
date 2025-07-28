@@ -49,6 +49,14 @@ Given that there are only two stages(Which we call production) and one environme
 **deploy job**
 ![pipeline design](../images/deploy-jobs.jpg)
 
-I used dind for the GitLab Runner executor
-Manual approval is required for deployment.
+- I used dind for the GitLab Runner executor
+- Manual approval is required for deployment.
+
+# App and services
+Instead of putting all the services in one compose, I preferred to create several separate composes for them in the compose
+
+We can create a compose and include all the composes in this file.
+
+I preferred to create a test-compose.sh file that runs the compose.
+
 

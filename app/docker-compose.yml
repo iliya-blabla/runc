@@ -3,7 +3,7 @@ networks:
   app_network:
     name: app_network
     external: true
-  galera-net:
+  galera_net:
     name: galera_net
     external: true
 services:

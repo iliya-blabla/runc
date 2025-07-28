@@ -10,7 +10,7 @@ default:
 variables:
   SSH_PORT: 22
 #For testing, we will set the private registry domain to reg.test.tld.
-  IMAGE_PATH: reg.test.tld/task
+  IMAGE_PATH: reg.test.tld:8082/repository/task
   SERVICE_PATH: /opt/services/app
   VERSION: v1.0.0
   APP_NETWORK: app_network
