@@ -12,8 +12,8 @@ services:
     hostname: mariadb-node1
     restart: ${MARIADB_RESTART_POLICY}
     environment:
-      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
-      - REPLICATION_PASSWORD=${MARIADB_ROOT_PASSWORD}
+      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD_NODE1}
+      - REPLICATION_PASSWORD=${MARIADB_ROOT_PASSWORD_NODE1}
     volumes:
       - ./node1/galera.cnf:/etc/mysql/mariadb.conf.d/galera.cnf
       - ./node1/galera:/var/lib/mysql
@@ -29,7 +29,7 @@ services:
     networks:
       - galera_net
     healthcheck:
-      test: ["CMD", "mariadb-admin", "ping", "-h", "localhost", "-u", "root", "-p${MARIADB_ROOT_PASSWORD}"]
+      test: ["CMD", "mariadb-admin", "ping", "-h", "localhost", "-u", "root", "-p${MARIADB_ROOT_PASSWORD_NODE1}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -41,8 +41,8 @@ services:
     hostname: mariadb-node2
     restart: ${MARIADB_RESTART_POLICY}
     environment:
-      - MARIADB_ROOT_PASSWORD= ${MARIADB_ROOT_PASSWORD}
-      - REPLICATION_PASSWORD=${MARIADB_ROOT_PASSWORD}
+      - MARIADB_ROOT_PASSWORD= ${MARIADB_ROOT_PASSWORD_NODE2}
+      - REPLICATION_PASSWORD=${MARIADB_ROOT_PASSWORD_NODE2}
     volumes:
       - ./node2/galera.cnf:/etc/mysql/mariadb.conf.d/galera.cnf
       - ./node2/galera:/var/lib/mysql
@@ -59,7 +59,7 @@ services:
       mariadb-node1:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "mariadb-admin", "ping", "-h", "localhost", "-u", "root", "-p${MARIADB_ROOT_PASSWORD}"]
+      test: ["CMD", "mariadb-admin", "ping", "-h", "localhost", "-u", "root", "-p${MARIADB_ROOT_PASSWORD_NODE2}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -70,8 +70,8 @@ services:
     hostname: mariadb-node3
     restart: ${MARIADB_RESTART_POLICY}
     environment:
-      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
-      - REPLICATION_PASSWORD=${MARIADB_ROOT_PASSWORD}
+      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD_NODE3}
+      - REPLICATION_PASSWORD=${MARIADB_ROOT_PASSWORD_NODE3}
     volumes:
       - ./node3/galera.cnf:/etc/mysql/mariadb.conf.d/galera.cnf
       - ./node3/galera:/var/lib/mysql
@@ -90,7 +90,7 @@ services:
       mariadb-node2:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "mariadb-admin", "ping", "-h", "localhost", "-u", "root", "-p${MARIADB_ROOT_PASSWORD}"]
+      test: ["CMD", "mariadb-admin", "ping", "-h", "localhost", "-u", "root", "-p${MARIADB_ROOT_PASSWORD_NODE3}"]
       interval: 10s
       timeout: 5s
       retries: 5

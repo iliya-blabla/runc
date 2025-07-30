@@ -3,9 +3,6 @@ networks:
   app_network:
     name: app_network
     external: true
-  galera_net:
-    name: galera_net
-    external: true
 services:
   django_app_1:
     image: ${REPOSITORY_NAME}/${IMAGE_DIRECTORY_NAME}/app:${VERSION}
@@ -22,7 +19,6 @@ services:
       - "8000"
     networks:
       - app_network
-      - galera_net
 
   django_app_2:
     image: ${REPOSITORY_NAME}/${IMAGE_DIRECTORY_NAME}/app:${VERSION}
@@ -39,4 +35,3 @@ services:
       - "8000"
     networks:
       - app_network
-      - galera_net

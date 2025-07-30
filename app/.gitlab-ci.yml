@@ -26,7 +26,7 @@ build-django-job:
 
 deploy-to-production:
   stage: deploy
-  image: reg.test.tld/app/runner-image:ssh
+  image: reg.test.tld/repositoryr/task/runner-image:ssh
   variables:
     DOMAIN: production.test.tld
     SERVER_NAME: production.test.tld

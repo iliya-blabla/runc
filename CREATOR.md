@@ -21,4 +21,14 @@ Due to my lack of proficiency in Python and the failure to submit it with the ta
 - I will add an application to the project using golang that connects to the database and runs its tests.
 - I will not check the application's connection to the database and use AI to write a simple Python program that only checks the compose files
 
+##### Table:
+If you have time, I would appreciate it if you could fill out this table.
 
+| Criterion | Score |
+|:------------|:-------------:|
+| Setting up the registry and configuring DNS | |
+| Setting up Smart DNS |      |
+| Server and registry hardening |      |
+| Implementing full CI/CD with Gitlab |     |
+| Deploy Django Nginx and Database with Compose |     |
+|Clean repo structure and documentation  |     |
