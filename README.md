@@ -63,7 +63,7 @@ COMMIT
 -A INPUT -i lo -j ACCEPT
 -A INPUT -p icmp -m icmp --icmp-type 8 -j ACCEPT
 -A INPUT -p tcp --dport 80 -j ACCEPT
--A INPUT -p tcp -m tcp --dport 22 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
+-A INPUT -s 192.168.122.1 -p tcp -m tcp --dport 22 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
 -A FORWARD -j DOCKER-USER
 -A FORWARD -j DOCKER-FORWARD
 -A OUTPUT -o enp1s0 -m conntrack --ctstate ESTABLISHED -j ACCEPT
@@ -131,7 +131,7 @@ COMMIT
 -A INPUT -i lo -j ACCEPT
 -A INPUT -p icmp -m icmp --icmp-type 8 -j ACCEPT
 -A INPUT -p tcp -m tcp --dport 80 -j ACCEPT
--A INPUT -i enp1s0 -p tcp -m tcp --dport 22 -j ACCEPT
+-A INPUT -i enp1s0 -s 192.168.122.1 -p tcp -m tcp --dport 22 -j ACCEPT
 -A INPUT -s 192.168.122.105/32 -i enp1s0 -p udp -m udp --dport 53 -j ACCEPT
 -A INPUT -s 192.168.122.105/32 -p tcp -m multiport --dports 8081,8082 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
 -A INPUT -s 192.168.122.1/32 -p tcp -m multiport --dports 8081,8082 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
