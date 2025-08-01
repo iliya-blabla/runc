@@ -4,29 +4,37 @@ stages:
 
 default:
   before_script:
-    - docker login -u ${CI_REGISTRY_URL} -p ${CI_JOB_TOKEN} ${CI_REGISTRY}
+    - docker login -u ${REGISTRY_USER} -p ${REGISTRY_PASS} ${REGISTRY_URL}
 
 
 variables:
   SSH_PORT: 22
-#For testing, we will set the private registry domain to reg.test.tld.
-  IMAGE_PATH: reg.test.tld:8082/repository/task
+  IMAGE_BASE_PATH: ${REGISTRY_URL}/task
+  IMAGE_NAME: app
   SERVICE_PATH: /opt/services/app
-  VERSION: v1.0.0
+  IMAGE_TAG_SHA: ${CI_COMMIT_SHORT_SHA}
+  APP_VERSION: ${CI_COMMIT_TAG:-${CI_COMMIT_SHORT_SHA}}
   APP_NETWORK: app_network
 build-django-job:
   stage: build
   script:
     - cd django
-    - docker build -t ${IMAGE_PATH}/app:$CI_COMMIT_SHORT_SHA .
-    - docker push ${IMAGE_PATH}/app:$CI_COMMIT_SHORT_SHA
-  except:
-    - schedules
+    - docker build -t ${IMAGE_BASE_PATH}/${IMAGE_NAME}:${IMAGE_TAG_SHA} .
+    - docker push ${IMAGE_BASE_PATH}/$IMAGE_NAME:${IMAGE_TAG_SHA}
+    - |
+      if [ -n "$CI_COMMIT_TAG" ]; then
+        echo "Detected tag: $CI_COMMIT_TAG"
+        docker tag ${IMAGE_BASE_PATH}/${IMAGE_NAME}:${IMAGE_T    AG_SHA ${IMAGE_BASE_PATH}/${IMAGE_NAME}:${CI_COMMIT_TAG}
+        docker push ${IMAGE_BASE_PATH}/${IMAGE_NAME}:${CI_COMMIT_TAG}
+      fi
   retry: 2
 
 deploy-to-production:
   stage: deploy
-  image: reg.test.tld/repositoryr/task/runner-image:ssh
+  rules:
+    - if: "CI_COMMIT_TAG"
+      when: manual
+  image: IMAGE_BASE_PATH/runner-image:ssh
   variables:
     DOMAIN: production.test.tld
     SERVER_NAME: production.test.tld
@@ -45,20 +53,15 @@ deploy-to-production:
       [ -d ${SERVICE_PATH} ] || mkdir -p ${SERVICE_PATH}
       "
       # change env file
-      sed -i "s/PIPELINE_ID/${VERSION}/g" .env
+      sed -i "s/PIPELINE_ID/${APP_VERSION}/g" .env
       # move compose and env file to server
       scp -o StrictHostKeyChecking=no -P${SSH_PORT} .env ${SSH_USER}@${SERVER_NAME}:${SERVICE_PATH}/
       scp -o StrictHostKeyChecking=no -P${SSH_PORT} docker-compose.yml ${SSH_USER}@${SERVER_NAME}:${SERVICE_PATH}/
       # deploy service on server
       ssh -o StrictHostKeyChecking=no -p ${SSH_PORT} ${SSH_USER}@${SERVER_NAME} "
-      docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
+      docker login -u ${REGISTRY_USER} -p ${REGISTRY_PASS} ${REGISTRY_URL}
       docker network ls | grep ${APP_NETWORK} || docker network create ${APP_NETWORK}
       cd ${SERVICE_PATH}
       docker compose pull
       docker compose up -d
       "
-  environment:
-    name: production
-  when: manual
-  except:
-    - schedules
