@@ -9,14 +9,11 @@ services:
     container_name: django_app_1
     hostname: django_app_1
     restart: ${RESTART_POLICY}
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost"]
-      interval: 15s
-      timeout: 5s
-      retries: 3
-      start_period: 10s
+    command: python manage.py runserver 0.0.0.0:8000
     expose:
       - "8000"
+    volumes:
+      - ./django:/app
     networks:
       - app_network
 
@@ -25,13 +22,10 @@ services:
     container_name: django_app_2
     hostname: django_app_2
     restart: ${RESTART_POLICY}
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost"]
-      interval: 15s
-      timeout: 5s
-      retries: 3
-      start_period: 10s
+    command: python manage.py runserver 0.0.0.0:8000
     expose:
       - "8000"
+    volumes:
+      - ./django:/app
     networks:
       - app_network
