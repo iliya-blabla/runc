@@ -148,19 +148,17 @@ deploy-to-production:
       ssh -o StrictHostKeyChecking=no -p ${SSH_PORT} ${SSH_USER}@${SERVER_NAME} "
       [ -d ${SERVICE_PATH} ] || mkdir -p ${SERVICE_PATH}
       "
- 
-      # مثلاً: sed -i "s/PIPELINE_ID/${APP_VERSION}/g" ../.env
       sed -i "s/PIPELINE_ID/${APP_VERSION}/g" .env
       # move compose and env file to server
       scp -o StrictHostKeyChecking=no -P${SSH_PORT} .env ${SSH_USER}@${SERVER_NAME}:${SERVICE_PATH}/
       scp -o StrictHostKeyChecking=no -P${SSH_PORT} docker-compose.yml ${SSH_USER}@${SERVER_NAME}:${SERVICE_PATH}/
       # deploy service on server
       ssh -o StrictHostKeyChecking=no -p ${SSH_PORT} ${SSH_USER}@${SERVER_NAME} "
-      docker login -u ${REGISTRY_USER} -p ${REGISTRY_PASS} ${REGISTRY_URL}
-      docker network ls | grep ${APP_NETWORK} || docker network create ${APP_NETWORK}
+      sudo docker login -u ${REGISTRY_USER} -p ${REGISTRY_PASS} ${REGISTRY_URL}
+      sudo docker network ls | grep ${APP_NETWORK} || docker network create ${APP_NETWORK}
       cd ${SERVICE_PATH}
-      docker compose pull 
-      docker compose up -d
+      sudo docker compose pull 
+      sudo docker compose up -d
       "
 ```
 # App and services:
